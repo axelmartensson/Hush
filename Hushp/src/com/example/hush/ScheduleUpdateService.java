@@ -27,18 +27,21 @@ public class ScheduleUpdateService extends Service {
 		Calendar nextRun = Calendar.getInstance();
 		//TODO FROM SETTINGS: update Interval
 		nextRun.add(Calendar.DATE, 1);
-		Intent wakeMeUp = new Intent(this, ScheduleUpdateService.class);
-		PendingIntent wakeMeUpLater = PendingIntent.getService(this, REQUEST_CODE, wakeMeUp, PendingIntent.FLAG_UPDATE_CURRENT);
-		alarmManager.set(AlarmManager.RTC_WAKEUP, nextRun.getTimeInMillis(), wakeMeUpLater);
-		
-		setAlarmOnEventsUntil(nextRun, alarmManager);
+		scheduleNextRun(nextRun, alarmManager);
+		scheduleMutesOnEventsUntil(nextRun, alarmManager);
 		
 		stopSelf();
 		return startId;
 		
 	}
 
-	private void setAlarmOnEventsUntil(Calendar nextRun, AlarmManager alarmManager) {
+	private void scheduleNextRun(Calendar nextRun, AlarmManager alarmManager) {
+		Intent wakeMeUp = new Intent(this, ScheduleUpdateService.class);
+		PendingIntent wakeMeUpLater = PendingIntent.getService(this, REQUEST_CODE, wakeMeUp, PendingIntent.FLAG_UPDATE_CURRENT);
+		alarmManager.set(AlarmManager.RTC_WAKEUP, nextRun.getTimeInMillis(), wakeMeUpLater);
+	}
+
+	private void scheduleMutesOnEventsUntil(Calendar nextRun, AlarmManager alarmManager) {
 		//TODO FROM SETTINGS: google calendar name
 		String calendarId = "student.lu.se_p8k1ctgclj9c72qete7qalh43s@group.calendar.google.com";
 		//spawn new thread for CalendarSynchronizer
@@ -47,7 +50,7 @@ public class ScheduleUpdateService extends Service {
 		try {
 			List<Event> events = calendarSynchronizer.getAllEventsFromNowUntil(nextRun);
 			for (Event event : events) {
-				//set alarm on event.startDate and event.endDate for Mute and Unmunte
+				//set alarm on event.startDate and event.endDate for Mute and Unmunte respectively
 			}
 		} catch (HttpResponseException e) {
 			// TODO Auto-generated catch block
