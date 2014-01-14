@@ -1,0 +1,39 @@
+OBS! detta kommer att flyttas till varje klass egen dokumentation
+
+- SettingsActivity (default, aktiveras när man trycker på appen)
+	* Najs!! Android fixar detta automagiskt, se Settings i dokumentationen
+	* låter användaren modifiera inställningar och sparar/laddar dessa på ett
+	  sådant sätt att de andra komponenterna kan komma åt dem (Hur?)
+	   
+	* onCreate() skapar GUI och laddar in inställningarna i det
+	* onDestroy() sparar intällningarna och startar ScheduleUpdateService
+
+- ScheduleUpdateService
+	* använder AlarmManager för att schemalägga nästa körning av sig själv
+	* använder CalendarSynchronize för att få fram en lista på kalender-händelser
+	  fram till nästa körning av sig själv
+	* (skickar listan genom filter)
+	* använder AlarmManager för att schemalägga körningar
+	  av Mute- och UnmuteService i enlighet med listan ovan
+
+- CalendarSynchronize
+	* innehåller ingen Androidspecifik kod, ska kunna testas utan emulator
+
+- MuteService
+	* sparar ljud- och vibrationsinställningar på ett sådant sätt
+	  att UnmuteService kan komma åt dem
+	* använder AudioManager för att sätta enheten på ljudlöst i enlighet med det
+	  som definierats i inställningarna (setRinger(RINGER_MODE_VIBRATE))
+
+- UnmuteService
+	* återställer enhetens ljud- och vibrationsinställningar till vad de var
+	  innan MuteService kördes
+ 
+ IMPLEMENTATIONSPRIORITET svårast först
+ 
+ CalendarSynchronize
+ ScheduleUpdateService
+ SettingsActivity
+ MuteService
+ UnmuteService
+ 
