@@ -1,39 +1,41 @@
 OBS! detta kommer att flyttas till varje klass egen dokumentation
 
-- SettingsActivity (default, aktiveras när man trycker på appen)
+- SettingsActivity (default, aktiveras nï¿½r man trycker pï¿½ appen)
 	* Najs!! Android fixar detta automagiskt, se Settings i dokumentationen
-	* låter användaren modifiera inställningar och sparar/laddar dessa på ett
-	  sådant sätt att de andra komponenterna kan komma åt dem (Hur?)
+	* lï¿½ter anvï¿½ndaren modifiera instï¿½llningar och sparar/laddar dessa pï¿½ ett
+	  sï¿½dant sï¿½tt att de andra komponenterna kan komma ï¿½t dem (Hur?)
 	   
-	* onCreate() skapar GUI och laddar in inställningarna i det
-	* onDestroy() sparar intällningarna och startar ScheduleUpdateService
+	* onCreate() skapar GUI och laddar in instï¿½llningarna i det
+	* onDestroy() sparar intï¿½llningarna och startar ScheduleUpdateService
 
 - ScheduleUpdateService
-	* använder AlarmManager för att schemalägga nästa körning av sig själv
-	* använder CalendarSynchronize för att få fram en lista på kalender-händelser
-	  fram till nästa körning av sig själv
+	* anvï¿½nder AlarmManager fï¿½r att schemalï¿½gga nï¿½sta kï¿½rning av sig sjï¿½lv
+	* anvï¿½nder CalendarSynchronize fï¿½r att fï¿½ fram en lista pï¿½ kalender-hï¿½ndelser
+	  fram till nï¿½sta kï¿½rning av sig sjï¿½lv
 	* (skickar listan genom filter)
-	* använder AlarmManager för att schemalägga körningar
+	* anvï¿½nder AlarmManager fï¿½r att schemalï¿½gga kï¿½rningar
 	  av Mute- och UnmuteService i enlighet med listan ovan
 
 - CalendarSynchronize
-	* innehåller ingen Androidspecifik kod, ska kunna testas utan emulator
+	* innehï¿½ller ingen Androidspecifik kod, ska kunna testas utan emulator
 
 - MuteService
-	* sparar ljud- och vibrationsinställningar på ett sådant sätt
-	  att UnmuteService kan komma åt dem
-	* använder AudioManager för att sätta enheten på ljudlöst i enlighet med det
-	  som definierats i inställningarna (setRinger(RINGER_MODE_VIBRATE))
+	* sparar ljud- och vibrationsinstï¿½llningar pï¿½ ett sï¿½dant sï¿½tt
+	  att UnmuteService kan komma ï¿½t dem
+	* anvï¿½nder AudioManager fï¿½r att sï¿½tta enheten pï¿½ ljudlï¿½st i enlighet med det
+	  som definierats i instï¿½llningarna (setRinger(RINGER_MODE_VIBRATE))
 
 - UnmuteService
-	* återställer enhetens ljud- och vibrationsinställningar till vad de var
-	  innan MuteService kördes
+	* ï¿½terstï¿½ller enhetens ljud- och vibrationsinstï¿½llningar till vad de var
+	  innan MuteService kï¿½rdes
  
- IMPLEMENTATIONSPRIORITET svårast först
+ IMPLEMENTATIONSPRIORITET svï¿½rast fï¿½rst
  
  CalendarSynchronize
  ScheduleUpdateService
  SettingsActivity
  MuteService
  UnmuteService
+ 
+ anvÃ¤nda roboguice?
  
