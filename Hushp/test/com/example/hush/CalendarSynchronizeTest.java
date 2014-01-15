@@ -40,7 +40,7 @@ public class CalendarSynchronizeTest {
     
     @Test
     public void shouldReturnAListOfEvents() throws Exception {
-    	String responseBody = fileContentToString("test/httpResponse.txt");
+    	String responseBody = Util.fileContentToString("test/httpResponse.txt");
     	Robolectric.addPendingHttpResponse(200, responseBody);
     	Calendar calendar = Calendar.getInstance();
     	calendar.add(Calendar.DAY_OF_MONTH, 2);
@@ -54,22 +54,7 @@ public class CalendarSynchronizeTest {
     	Calendar calendar = Calendar.getInstance();
     	List<Event> list = calendarSynchronizer.getAllEventsBetween(lowerBoundCalendar, calendar);
     }
-    private String fileContentToString(String fileName) {
-		StringBuilder content = new StringBuilder();
-		try {
-			BufferedReader buf = new BufferedReader(new FileReader(fileName));
-			String line = "";
-			while ((line = buf.readLine()) != null) {
-				content.append(line);
-			}
-		} catch (FileNotFoundException e1) {
-			assertTrue("FileNotFound: "+fileName, false);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return content.toString();
-	}
+    
     @After
     public void tearDown(){
     	calendarSynchronizer = null;

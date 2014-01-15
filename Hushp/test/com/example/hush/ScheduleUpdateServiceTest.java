@@ -2,6 +2,8 @@ package com.example.hush;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -23,9 +25,13 @@ public class ScheduleUpdateServiceTest {
 	
 	@Test
 	public void shouldWakeUp(){
-		Intent startIntent = new Intent(Robolectric.application, ScheduleUpdateService.class);
-		ScheduleUpdateService scheduleUpdateService = new ScheduleUpdateService();
-		scheduleUpdateService.onStartCommand(startIntent, 0, 2);
+//		List<Class<?>> lst = Robolectric.getDefaultShadowClasses();
+//		for (Class<?> class1 : lst) {
+//			System.out.println(class1);
+//		}
+		String responseBody = Util.fileContentToString("test/httpResponse.txt");
+    	Robolectric.addPendingHttpResponse(200, responseBody);
+		new ScheduleUpdateService.ScheduleUpdater(Robolectric.application).execute();
 		
 	}
 }
