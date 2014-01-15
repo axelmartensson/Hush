@@ -8,7 +8,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowAlarmManager;
+import org.robolectric.shadows.ShadowAlarmManager.ScheduledAlarm;
 
+import android.app.AlarmManager;
 import android.content.Context;
 import android.content.Intent;
 
@@ -24,7 +27,7 @@ public class ScheduleUpdateServiceTest {
 	}
 	
 	@Test
-	public void shouldWakeUp(){
+	public void shouldScheduleItself(){
 //		List<Class<?>> lst = Robolectric.getDefaultShadowClasses();
 //		for (Class<?> class1 : lst) {
 //			System.out.println(class1);
@@ -32,6 +35,11 @@ public class ScheduleUpdateServiceTest {
 		String responseBody = Util.fileContentToString("test/httpResponse.txt");
     	Robolectric.addPendingHttpResponse(200, responseBody);
 		new ScheduleUpdateService.ScheduleUpdater(Robolectric.application).execute();
+		AlarmManager alarmManager = (AlarmManager) Robolectric.application.getSystemService(Context.ALARM_SERVICE);
+		ShadowAlarmManager shadow = Robolectric.shadowOf(alarmManager);
+		ScheduledAlarm alarm = shadow.peekNextScheduledAlarm();
+		//find a way to assert that schedulesynchronize.class is in the intent
+		System.out.println(alarm.operation.toString());
 		
 	}
 }
