@@ -10,6 +10,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowAlarmManager;
 import org.robolectric.shadows.ShadowAlarmManager.ScheduledAlarm;
+import org.robolectric.shadows.ShadowPendingIntent;
 
 import android.app.AlarmManager;
 import android.content.Context;
@@ -28,18 +29,18 @@ public class ScheduleUpdateServiceTest {
 	
 	@Test
 	public void shouldScheduleItself(){
-//		List<Class<?>> lst = Robolectric.getDefaultShadowClasses();
-//		for (Class<?> class1 : lst) {
-//			System.out.println(class1);
-//		}
-		String responseBody = Util.fileContentToString("test/httpResponse.txt");
-    	Robolectric.addPendingHttpResponse(200, responseBody);
-		new ScheduleUpdateService.ScheduleUpdater(Robolectric.application).execute();
+		String className = ".ScheduleUpdateService";
+		MockCalendarSynchronizer mockCalendarSynchronizer = new MockCalendarSynchronizer();
+		new ScheduleUpdateService.ScheduleUpdater(Robolectric.application, mockCalendarSynchronizer).execute();
 		AlarmManager alarmManager = (AlarmManager) Robolectric.application.getSystemService(Context.ALARM_SERVICE);
-		ShadowAlarmManager shadow = Robolectric.shadowOf(alarmManager);
-		ScheduledAlarm alarm = shadow.peekNextScheduledAlarm();
-		//find a way to assert that schedulesynchronize.class is in the intent
-		System.out.println(alarm.operation.toString());
-		
+		ShadowAlarmManager shadowAlarmManager = Robolectric.shadowOf(alarmManager);
+		ScheduledAlarm alarm = shadowAlarmManager.peekNextScheduledAlarm();
+		ShadowPendingIntent shadowPendingIntent = Robolectric.shadowOf(alarm.operation);
+		Intent startScheduleUpdateService = shadowPendingIntent.getSavedIntent();
+		assertEquals(className, startScheduleUpdateService.getComponent().getShortClassName());
+	}
+
+	@Test
+	public void shouldScheduleTestActivity(){
 	}
 }

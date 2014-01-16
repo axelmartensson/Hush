@@ -22,23 +22,31 @@ public class ScheduleUpdateService extends Service {
 	}
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		new ScheduleUpdater(this).execute();
+		// TODO FROM SETTINGS: google calendar name
+		String calendarId = "student.lu.se_p8k1ctgclj9c72qete7qalh43s@group.calendar.google.com";
+		// spawn new thread for CalendarSynchronizer
+		CalendarSynchronizer calendarSynchronizer = new CalendarSynchronizer(calendarId);
+		new ScheduleUpdater(this, calendarSynchronizer).execute();
 		stopSelf();
 		return startId;
 	}
 	
 	static class ScheduleUpdater {
 		private Context context;
+		private CalendarSynchronizer calendarSynchronizer;
 		
-		public ScheduleUpdater(Context context) {
+
+		public ScheduleUpdater(Context context,
+				CalendarSynchronizer calendarSynchronizer) {
 			this.context = context;
+			this.calendarSynchronizer = calendarSynchronizer;
 		}
 
 		void execute(){
-			AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 			Calendar nextRun = Calendar.getInstance();
 			// TODO FROM SETTINGS: update Interval
 			nextRun.add(Calendar.DATE, 1);
+			AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 			scheduleNextRun(nextRun, alarmManager);
 			scheduleMutesOnEventsUntil(nextRun, alarmManager);
 
@@ -54,12 +62,6 @@ public class ScheduleUpdateService extends Service {
 
 		private void scheduleMutesOnEventsUntil(Calendar nextRun,
 				AlarmManager alarmManager) {
-			// TODO FROM SETTINGS: google calendar name
-			String calendarId = "student.lu.se_p8k1ctgclj9c72qete7qalh43s@group.calendar.google.com";
-			// spawn new thread for CalendarSynchronizer
-			CalendarSynchronizer calendarSynchronizer = new CalendarSynchronizer(
-					calendarId);
-
 			try {
 				List<Event> events = calendarSynchronizer
 						.getAllEventsFromNowUntil(nextRun);

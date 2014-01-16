@@ -1,0 +1,10 @@
+{
+ "kind": "calendar#events",
+ "etag": "\"mcA89oqZUm957ZD5la_UVQ4xRr8/0dSqYBK3YJ91a4p34Y7aXOX2gQE\"",
+ "summary": "test",
+ "description": "",
+ "updated": "2014-01-13T23:12:49.591Z",
+ "timeZone": "Europe/Stockholm",
+ "accessRole": "owner",
+ "items": []
+}
