@@ -24,11 +24,13 @@ import org.json.JSONTokener;
 import android.net.http.AndroidHttpClient;
 
 public class CalendarSynchronizer {
+	private static final String JAVA6FORMAT = "yyyy-mm-dd'T'HH:mm:ssZ";
+	private static final String JAVA7FORMAT = "yyyy-mm-dd'T'HH:mm:ssXXXXX";
 	private static final String API_KEY = "AIzaSyD9bCnfIL-OsiGkBgjVDpjpbk7UaEXANfo";
 	private AndroidHttpClient httpClient = AndroidHttpClient
 			.newInstance("Hush");
 	private SimpleDateFormat googleDateFormat = new SimpleDateFormat(
-			"yyyy-mm-dd'T'HH:mm:ssXXX", Locale.US);
+			JAVA6FORMAT, Locale.US);
 	private String calendarId;
 
 	public CalendarSynchronizer(String calendarId) {
@@ -69,16 +71,28 @@ public class CalendarSynchronizer {
 			throws JSONException {
 		JSONObject start = event.getJSONObject(end);
 		String dateTime = start.getString("dateTime");
-		Date date = null;
 		try {
-			date = googleDateFormat.parse(dateTime);
+			Date date = googleDateFormat.parse(insertColon(dateTime));
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			return calendar;
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
-		return calendar;
+		
+	}
+	/**
+	 * This is a fix for Java 1.6, because the X format character
+	 * is not available in its SimpleDateFormat implementation
+	 * @param dateTime
+	 * @return
+	 */
+	private String insertColon(String dateTime) {
+		StringBuffer fixed = new StringBuffer(dateTime);
+		fixed.deleteCharAt(fixed.length()-3);
+		return fixed.toString();
 	}
 
 	private String getJSONFromServer(Calendar startDate, Calendar endDate) throws HttpResponseException {

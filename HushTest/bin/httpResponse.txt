@@ -1,0 +1,42 @@
+{
+ "kind": "calendar#events",
+ "etag": "\"mcA89oqZUm957ZD5la_UVQ4xRr8/0dSqYBK3YJ91a4p34Y7aXOX2gQE\"",
+ "summary": "test",
+ "description": "",
+ "updated": "2014-01-13T23:12:49.591Z",
+ "timeZone": "Europe/Stockholm",
+ "accessRole": "owner",
+ "items": [
+  {
+
+   "kind": "calendar#event",
+   "etag": "\"mcA89oqZUm957ZD5la_UVQ4xRr8/MTM4OTYxNTkwODk0NjAwMA\"",
+   "id": "609d7qnpr5ovanisrj3ipu04eo",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=NjA5ZDdxbnByNW92YW5pc3JqM2lwdTA0ZW8gc3R1ZGVudC5sdS5zZV9wOGsxY3RnY2xqOWM3MnFldGU3cWFsaDQzc0Bn",
+   "created": "2014-01-13T10:12:03.000Z",
+   "updated": "2014-01-13T12:25:08.946Z",
+   "summary": "bio",
+   "creator": {
+    "email": "dat12ama@student.lu.se",
+    "displayName": "AXEL MÅRTENSSON"
+   },
+   "organizer": {
+    "email": "student.lu.se_p8k1ctgclj9c72qete7qalh43s@group.calendar.google.com",
+    "displayName": "test",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2014-01-13T16:30:00+01:00"
+   },
+   "end": {
+    "dateTime": "2014-01-13T17:30:00+01:00"
+   },
+   "iCalUID": "609d7qnpr5ovanisrj3ipu04eo@google.com",
+   "sequence": 1,
+   "reminders": {
+    "useDefault": true
+   }
+  }
+ ]
+}
