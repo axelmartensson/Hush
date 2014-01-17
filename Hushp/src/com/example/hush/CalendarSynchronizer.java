@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,6 +40,12 @@ public class CalendarSynchronizer {
 		this.calendarId = calendarId;
 	}
 	
+	/**
+	 * post: events are sorted in ascending order based on start date
+	 * @param endDate
+	 * @return a list of events in ascending order
+	 * @throws HttpResponseException
+	 */
 	public List<Event> getAllEventsFromNowUntil(Calendar endDate)
 			throws HttpResponseException {
 		return getAllEventsBetween(Calendar.getInstance(), endDate);
@@ -64,6 +72,7 @@ public class CalendarSynchronizer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		Collections.sort(eventsBefore);
 		return eventsBefore;
 	}
 

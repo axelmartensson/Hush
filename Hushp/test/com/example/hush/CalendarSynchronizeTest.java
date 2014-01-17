@@ -26,6 +26,7 @@ public class CalendarSynchronizeTest {
 
 	private CalendarSynchronizer calendarSynchronizer;
 	private Calendar lowerBoundCalendar;
+    Calendar today = Calendar.getInstance();
 	@Before
 	public void setUp(){
 		calendarSynchronizer = new CalendarSynchronizer("student.lu.se_p8k1ctgclj9c72qete7qalh43s@group.calendar.google.com");
@@ -42,17 +43,27 @@ public class CalendarSynchronizeTest {
     public void shouldReturnAListOfEvents() throws Exception {
     	String responseBody = Util.fileContentToString("test/httpResponse.txt");
     	Robolectric.addPendingHttpResponse(200, responseBody);
-    	Calendar calendar = Calendar.getInstance();
-    	calendar.add(Calendar.DAY_OF_MONTH, 2);
-    	List<Event> list = calendarSynchronizer.getAllEventsBetween(lowerBoundCalendar, calendar);
+    	List<Event> list = calendarSynchronizer.getAllEventsBetween(lowerBoundCalendar, today);
         assertFalse(list.isEmpty());
+    }
+    
+    @Test
+    public void shouldReturnAListOfEventsInAscendingOrder() throws Exception {
+    	String responseBody = Util.fileContentToString("test/httpResponseThreeItems.txt");
+    	Robolectric.addPendingHttpResponse(200, responseBody);
+    	List<Event> list = calendarSynchronizer.getAllEventsBetween(lowerBoundCalendar, today);
+        assertEquals(3, list.size());
+        for (int i = 0; i < list.size()-1; i++) {
+        	Calendar date = list.get(i).getStartDate();
+        	Calendar nextDate = list.get(i+1).getStartDate();
+			assertTrue(date.before(nextDate));
+		}
     }
     
     @Test(expected=HttpResponseException.class)
     public void shouldFailIf404() throws Exception {
     	Robolectric.addPendingHttpResponse(404, "");
-    	Calendar calendar = Calendar.getInstance();
-    	List<Event> list = calendarSynchronizer.getAllEventsBetween(lowerBoundCalendar, calendar);
+    	List<Event> list = calendarSynchronizer.getAllEventsBetween(lowerBoundCalendar, today);
     }
     
     @After
