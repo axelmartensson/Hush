@@ -46,14 +46,14 @@ public class CalendarSynchronizer {
 	 * @return a list of events in ascending order
 	 * @throws HttpResponseException
 	 */
-	public List<Event> getAllEventsFromNowUntil(Calendar endDate)
+	public LinkedList<Event> getAllEventsFromNowUntil(Calendar endDate)
 			throws HttpResponseException {
 		return getAllEventsBetween(Calendar.getInstance(), endDate);
 	}
 
-	public List<Event> getAllEventsBetween(Calendar startDate, Calendar endDate)
+	public LinkedList<Event> getAllEventsBetween(Calendar startDate, Calendar endDate)
 			throws HttpResponseException {
-		List<Event> eventsBefore = new LinkedList<Event>();
+		LinkedList<Event> eventsBefore = new LinkedList<Event>();
 		String JSONString = getJSONFromServer(startDate, endDate);
 		try {
 			JSONObject responseBody = new JSONObject(
