@@ -63,7 +63,7 @@ public class ScheduleUpdateService extends Service {
 					Event first = events.get(0);
 					Calendar nextMute = first.getStartDate();
 					Intent mutePhone = new Intent(context, MuteService.class);
-					mutePhone.putExtra("events", events);
+					mutePhone.putExtra(AlarmScheduler.EXTRA_NAME, events);
 					scheduleIntent(nextMute, mutePhone);
 				}
 			} catch (HttpResponseException e) {

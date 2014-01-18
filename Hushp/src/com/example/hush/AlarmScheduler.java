@@ -12,6 +12,7 @@ public class AlarmScheduler {
 	protected Context context;
 	protected AlarmManager alarmManager;
 	private static final int REQUEST_CODE = 420;
+	protected static final String EXTRA_NAME = "events";
 
 	public AlarmScheduler(Context context) {
 		this.context = context;

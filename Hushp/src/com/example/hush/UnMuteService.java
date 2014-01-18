@@ -7,31 +7,25 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 
-public class MuteService extends Service {
+public class UnMuteService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		new Muter(this, intent).execute();
+		new UnMuter(this, intent).execute();
 		stopSelf();
 		return startId;
 	}
 	
-	static class Muter extends AlarmScheduler{
+	static class UnMuter extends AlarmScheduler{
 		private LinkedList<Event> events;
-		public Muter(Context context, Intent intent){
+		public UnMuter(Context context, Intent intent){
 			super(context);
 			events = (LinkedList<Event>) intent.getSerializableExtra(EXTRA_NAME);
 		}
 		
 		public void execute(){
 			Event event = events.getFirst();
-			scheduleUnMute(event);
-		}
 
-		private void scheduleUnMute(Event event) {
-			Intent unMutePhone = new Intent(context, UnMuteService.class);
-			unMutePhone.putExtra(EXTRA_NAME, events);
-			scheduleIntent(event.getEndDate(), unMutePhone);
 		}
 	}
 	@Override
