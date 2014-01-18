@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.IBinder;
 
 public class UnMuteService extends Service {
@@ -18,24 +19,26 @@ public class UnMuteService extends Service {
 
 	static class UnMuter extends AlarmScheduler {
 		private LinkedList<Event> events;
+		private AudioManager audioManager;
 
 		public UnMuter(Context context, Intent intent) {
 			super(context);
 			events = (LinkedList<Event>) intent
 					.getSerializableExtra(EXTRA_NAME);
+			audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 		}
 
 		public void execute() {
 			Event event = events.removeFirst();
-			unMutePhone(event);
+			unMutePhone();
 			if (!events.isEmpty()) {
 				Event nextEvent = events.getFirst();
 				scheduleMute(nextEvent);
 			}
 		}
 
-		private void unMutePhone(Event event) {
-			// TODO Auto-generated method stub
+		private void unMutePhone() {
+			audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
 		}
 
 		private void scheduleMute(Event event) {

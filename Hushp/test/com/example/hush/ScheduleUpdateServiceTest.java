@@ -36,7 +36,7 @@ public class ScheduleUpdateServiceTest {
 	}
 
 	@Test
-	public void shouldNotFail() {
+	public void alarmManagerHasShadow() {
 		Object systemService = Robolectric.application
 				.getSystemService(Context.ALARM_SERVICE);
 

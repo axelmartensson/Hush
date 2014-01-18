@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowAlarmManager;
 import org.robolectric.shadows.ShadowAlarmManager.ScheduledAlarm;
 import org.robolectric.shadows.ShadowPendingIntent;
@@ -19,7 +20,9 @@ import org.robolectric.shadows.ShadowPendingIntent;
 import android.app.AlarmManager;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 
+@Config(shadows=EnhancedShadowAudioManager.class)
 @RunWith(RobolectricTestRunner.class)
 public class MuteServiceTest {
 	private Calendar startDate;
@@ -34,9 +37,28 @@ public class MuteServiceTest {
 		startDate.set(Calendar.MINUTE, 00);
 		startDate.set(Calendar.SECOND, 0);
 	}
+	
+	@Test
+	public void audioManagerHasShadow() {
+		Object systemService = Robolectric.application
+				.getSystemService(Context.AUDIO_SERVICE);
+
+		assertFalse(systemService == null);
+	}
+	
 	@Test
 	public void shouldMutePhone() {
+		AudioManager audioManager =(AudioManager) Robolectric.application.getSystemService(Context.AUDIO_SERVICE);
+		assertEquals(AudioManager.RINGER_MODE_NORMAL, audioManager.getRingerMode());
+		LinkedList<Event> events = new LinkedList<Event>();
+		Calendar eventTime = Calendar.getInstance();
+		events.add(new Event(eventTime, eventTime));
 
+		Intent mutePhone = new Intent(Robolectric.application, MuteService.class);
+		mutePhone.putExtra("events", events);
+		new MuteService.Muter(Robolectric.application,
+				mutePhone).execute();
+		assertEquals(AudioManager.RINGER_MODE_VIBRATE, audioManager.getRingerMode());
 	}
 
 	@Test

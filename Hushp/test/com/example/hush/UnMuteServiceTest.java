@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowAlarmManager;
 import org.robolectric.shadows.ShadowAlarmManager.ScheduledAlarm;
 import org.robolectric.shadows.ShadowPendingIntent;
@@ -20,6 +21,7 @@ import android.app.AlarmManager;
 import android.content.Context;
 import android.content.Intent;
 
+@Config(shadows=EnhancedShadowAudioManager.class)
 @RunWith(RobolectricTestRunner.class)
 public class UnMuteServiceTest {
 	private Calendar startDate;
