@@ -34,6 +34,7 @@ public class UnMuteServiceTest {
 		startDate.set(Calendar.MINUTE, 00);
 		startDate.set(Calendar.SECOND, 0);
 	}
+
 	@Test
 	public void shouldUnMutePhone() {
 
@@ -51,10 +52,11 @@ public class UnMuteServiceTest {
 		Event secondEvent = new Event(secondEventTime, secondEventTime);
 		events.add(secondEvent);
 
-		Intent unMutePhone = new Intent(Robolectric.application, MuteService.class);
+		Intent unMutePhone = new Intent(Robolectric.application,
+				MuteService.class);
 		unMutePhone.putExtra("events", events);
-		new UnMuteService.UnMuter(Robolectric.application,
-				unMutePhone).execute();
+		new UnMuteService.UnMuter(Robolectric.application, unMutePhone)
+				.execute();
 
 		ScheduledAlarm alarm = getNextScheduledAlarm();
 		Intent startUnMuteService = getIntent(alarm);
@@ -62,9 +64,27 @@ public class UnMuteServiceTest {
 				.getShortClassName());
 		assertEquals(secondEventTime.getTimeInMillis(), alarm.triggerAtTime);
 
-		LinkedList<Event> eventsInIntent = (LinkedList<Event>) startUnMuteService.getExtras().get("events");
+		LinkedList<Event> eventsInIntent = (LinkedList<Event>) startUnMuteService
+				.getExtras().get("events");
 		assertTrue(eventsInIntent.size() == 1);
 		assertEquals(secondEvent, eventsInIntent.getFirst());
+	}
+
+	@Test
+	public void shouldStopSchedulingWhenNoMoreEvents() {
+		String className = ".MuteService";
+
+		LinkedList<Event> events = new LinkedList<Event>();
+		Calendar firstEventTime = Calendar.getInstance();
+		events.add(new Event(firstEventTime, firstEventTime));
+		Intent unMutePhone = new Intent(Robolectric.application,
+				MuteService.class);
+		unMutePhone.putExtra("events", events);
+		new UnMuteService.UnMuter(Robolectric.application, unMutePhone)
+				.execute();
+
+		ScheduledAlarm alarm = getNextScheduledAlarm();
+		assertNull(alarm);
 	}
 
 	private Intent getIntent(ScheduledAlarm alarm) {
