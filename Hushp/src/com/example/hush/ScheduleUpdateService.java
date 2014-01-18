@@ -22,6 +22,7 @@ public class ScheduleUpdateService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		System.out.println("ScheduleUpdateService Started!!");
 		// TODO FROM SETTINGS: google calendar name
 		String calendarId = "student.lu.se_p8k1ctgclj9c72qete7qalh43s@group.calendar.google.com";
 		// spawn new thread for CalendarSynchronizer

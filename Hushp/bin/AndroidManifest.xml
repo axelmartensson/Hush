@@ -22,6 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name="MuteService" android:process="@string/serviceProcess"></service>
+        <service android:name="ScheduleUpdateService" android:process="@string/serviceProcess"></service>
+        <service android:name="UnMuteService" android:process="@string/serviceProcess"></service>
     </application>
 
 </manifest>
