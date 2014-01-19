@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import android.net.http.AndroidHttpClient;
+import android.os.AsyncTask;
 
 public class CalendarSynchronizer {
 	private static final String JAVA6FORMAT = "yyyy-mm-dd'T'HH:mm:ssZ";
@@ -39,9 +40,10 @@ public class CalendarSynchronizer {
 		super();
 		this.calendarId = calendarId;
 	}
-	
+
 	/**
 	 * post: events are sorted in ascending order based on start date
+	 * 
 	 * @param endDate
 	 * @return a list of events in ascending order
 	 * @throws HttpResponseException
@@ -51,8 +53,8 @@ public class CalendarSynchronizer {
 		return getAllEventsBetween(Calendar.getInstance(), endDate);
 	}
 
-	public LinkedList<Event> getAllEventsBetween(Calendar startDate, Calendar endDate)
-			throws HttpResponseException {
+	public LinkedList<Event> getAllEventsBetween(Calendar startDate,
+			Calendar endDate) throws HttpResponseException {
 		LinkedList<Event> eventsBefore = new LinkedList<Event>();
 		String JSONString = getJSONFromServer(startDate, endDate);
 		try {
@@ -63,7 +65,7 @@ public class CalendarSynchronizer {
 				JSONObject event = events.getJSONObject(i);
 				Calendar eventStartDate = extractDate(event, "start");
 				Calendar eventEndDate = extractDate(event, "end");
-				if(eventStartDate.after(startDate)){
+				if (eventStartDate.after(startDate)) {
 					eventsBefore.add(new Event(eventStartDate, eventEndDate));
 				}
 
@@ -90,21 +92,24 @@ public class CalendarSynchronizer {
 			e.printStackTrace();
 			return null;
 		}
-		
+
 	}
+
 	/**
-	 * This is a fix for Java 1.6, because the X format character
-	 * is not available in its SimpleDateFormat implementation
+	 * This is a fix for Java 1.6, because the X format character is not
+	 * available in its SimpleDateFormat implementation
+	 * 
 	 * @param dateTime
 	 * @return
 	 */
 	private String insertColon(String dateTime) {
 		StringBuffer fixed = new StringBuffer(dateTime);
-		fixed.deleteCharAt(fixed.length()-3);
+		fixed.deleteCharAt(fixed.length() - 3);
 		return fixed.toString();
 	}
 
-	private String getJSONFromServer(Calendar startDate, Calendar endDate) throws HttpResponseException {
+	private String getJSONFromServer(Calendar startDate, Calendar endDate)
+			throws HttpResponseException {
 		HttpResponse response = getHttpResponse(startDate, endDate);
 		StatusLine statusLine = response.getStatusLine();
 		int statusCode = statusLine.getStatusCode();
@@ -139,8 +144,9 @@ public class CalendarSynchronizer {
 		String lowerBound = googleDateFormat.format(startDate.getTime());
 		String upperBound = googleDateFormat.format(endDate.getTime());
 		String uri = "https://www.googleapis.com/calendar/v3/calendars/"
-				+ calendarId + "/events?timeMin="+lowerBound+"&timeMax="+upperBound+"&key=" + API_KEY;
-		
+				+ calendarId + "/events?timeMin=" + lowerBound + "&timeMax="
+				+ upperBound + "&key=" + API_KEY;
+
 		HttpGet request = new HttpGet(uri);
 		HttpResponse response = null;
 		try {
@@ -167,4 +173,5 @@ public class CalendarSynchronizer {
 		}
 		return content.toString();
 	}
+
 }

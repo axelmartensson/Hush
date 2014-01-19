@@ -45,10 +45,9 @@ public class ScheduleUpdateServiceTest {
 
 	@Test
 	public void shouldScheduleItself() {
-		MockCalendarSynchronizer mockCalendarSynchronizer = new MockCalendarSynchronizer(
-				new LinkedList<Event>());
+				;
 		new ScheduleUpdateService.ScheduleUpdater(Robolectric.application,
-				mockCalendarSynchronizer).execute();
+				new LinkedList<Event>(), Calendar.getInstance()).execute();
 		String className = ".ScheduleUpdateService";
 		ScheduledAlarm alarm = getNextScheduledAlarm();
 		Intent startScheduleUpdateService = getIntent(alarm);
@@ -62,10 +61,8 @@ public class ScheduleUpdateServiceTest {
 		LinkedList<Event> events = new LinkedList<Event>();
 		Calendar eventTime = Calendar.getInstance();
 		events.add(new Event(eventTime, eventTime));
-		MockCalendarSynchronizer mockCalendarSynchronizer = new MockCalendarSynchronizer(
-				events);
 		new ScheduleUpdateService.ScheduleUpdater(Robolectric.application,
-				mockCalendarSynchronizer).execute();
+				events, Calendar.getInstance()).execute();
 		getNextScheduledAlarm();
 		ScheduledAlarm alarm = getNextScheduledAlarm();
 		Intent startMuteService = getIntent(alarm);
