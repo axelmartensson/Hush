@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -27,6 +29,7 @@ import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 
 public class CalendarSynchronizer {
+	private static final String CHARSET = "UTF-8";
 	private static final String JAVA6FORMAT = "yyyy-mm-dd'T'HH:mm:ssZ";
 	private static final String JAVA7FORMAT = "yyyy-mm-dd'T'HH:mm:ssXXXXX";
 	private static final String API_KEY = "AIzaSyD9bCnfIL-OsiGkBgjVDpjpbk7UaEXANfo";
@@ -114,13 +117,8 @@ public class CalendarSynchronizer {
 		StatusLine statusLine = response.getStatusLine();
 		int statusCode = statusLine.getStatusCode();
 		if (statusCode < 200 || statusCode > 299) {
-			if (statusCode == 404) {
 				throw new HttpResponseException(statusCode, statusCode
-						+ " - Calendar Not Found");
-			} else {
-				throw new HttpResponseException(statusCode, statusCode
-						+ " - Unknown Error");
-			}
+						+" "+ statusLine.getReasonPhrase());
 		}
 		return extractResponseBody(response);
 	}
@@ -143,9 +141,16 @@ public class CalendarSynchronizer {
 	private HttpResponse getHttpResponse(Calendar startDate, Calendar endDate) {
 		String lowerBound = googleDateFormat.format(startDate.getTime());
 		String upperBound = googleDateFormat.format(endDate.getTime());
-		String uri = "https://www.googleapis.com/calendar/v3/calendars/"
-				+ calendarId + "/events?timeMin=" + lowerBound + "&timeMax="
-				+ upperBound + "&key=" + API_KEY;
+		String uri = null;
+		try {
+			uri = "https://www.googleapis.com/calendar/v3/calendars/"
+					+ URLEncoder.encode(calendarId, CHARSET) + "/events?timeMin=" 
+					+ URLEncoder.encode (lowerBound, CHARSET)+ "&timeMax="
+					+ URLEncoder.encode (upperBound, CHARSET)+ "&key=" + API_KEY;
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		HttpGet request = new HttpGet(uri);
 		HttpResponse response = null;
